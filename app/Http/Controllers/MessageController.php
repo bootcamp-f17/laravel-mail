@@ -34,8 +34,9 @@ class MessageController extends Controller
 
     public function trash() {
         $title = "Trash";
-        $messages = \Auth::user()->trash()->get();
-        return view('messages.to', compact('messages', 'title'));
+        $inboxTrash = \Auth::user()->inboxTrash()->get();
+        $sentTrash = \Auth::user()->sentTrash()->get();
+        return view('messages.trash', compact('inboxTrash', 'sentTrash', 'title'));
     }
 
     public function sent() {
@@ -158,7 +159,7 @@ class MessageController extends Controller
 
         }
         else if ( \Auth::user()->received->contains($id) == false ) {
-             $message = \Auth::user()->trash()->orderBy('id', 'desc')->get();
+             $message = \Auth::user()->inboxTrash()->orderBy('id', 'desc')->get();
              $message = \App\Message::find($id);
              $show_star = false;
 
@@ -204,6 +205,11 @@ class MessageController extends Controller
     public function destroy($id)
     {
         $message = \App\Message::find($id);
+
+        $sentMessage = \App\Message::find($id);
+        $sentMessage->is_deleted = true;
+        $sentMessage->save();
+
         $test = $message->recipients()->first()->pivot->deleted_at;
 
         if ($test == null) {

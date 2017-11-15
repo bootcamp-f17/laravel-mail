@@ -28,7 +28,10 @@ class User extends Authenticatable
     ];
 
     public function sent() {
-        return $this->hasMany('App\Message', 'sender_id')->where('sent_at', '!=', null);
+        return $this
+                ->hasMany('App\Message', 'sender_id')
+                ->where('sent_at', '!=', null)
+                ->where('is_deleted', '=', false);
     }
 
     public function drafts() {
@@ -56,11 +59,7 @@ class User extends Authenticatable
                 ->where('message_user.deleted_at', '=', null);
     }
 
-    public function trash() {
-
-        // The trash can only shows deleted messages that others have sent to us!
-
-        // TODO: Also show messages that we wrote and then deleted (sent or unsent)
+    public function inboxTrash() {
 
         return 
             $this
@@ -69,6 +68,15 @@ class User extends Authenticatable
                 ->withTimestamps()
                 ->where('sent_at', '!=', null)
                 ->where('message_user.deleted_at', '!=', null);
+    }
+
+    public function sentTrash() {
+
+        return
+            $this
+                ->hasMany('App\Message', 'sender_id')
+                ->where('sent_at', '!=', null)
+                ->where('is_deleted', '=', true);
     }
 
 }

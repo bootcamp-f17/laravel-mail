@@ -9,17 +9,17 @@
     <form class="button-form" method="post" action="/messages/{{ $message->id }}">
       {{ csrf_field() }}
       {{ method_field('DELETE') }}
-      <button class="btn btn-xs btn-default {{ $trash_class }}">
+      <button class="btn btn-xs btn-default">
         <i class="fa fa-trash" aria-hidden="true"></i>
       </button>
     </form>
 
-    @if ($show_star)
+@if ($show_star)
     <form class="button-form" method="post" action="/messages/{{ $message->id }}/star">
       {{ csrf_field() }}
       <button class="btn btn-xs btn-default {{ $star_class }}"><strong>&#9734;</strong></button>
     </form>
-    @endif
+@endif
 
   </div>
 
