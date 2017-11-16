@@ -20,26 +20,26 @@ class MessageController extends Controller
     public function index()
     {
         $title = "Inbox";
-        $messages = \Auth::user()->received()->get();
+        $messages = \Auth::user()->received()->orderBy('id', 'desc')->get();
         return view('messages.to', compact('messages', 'title'));
     }
 
     public function starred() {
         $title = "Starred";
-        $messages = \Auth::user()->starred()->get();
+        $messages = \Auth::user()->starred()->orderBy('id', 'desc')->get();
         return view('messages.to', compact('messages', 'title'));
     }
 
     public function trash() {
         $title = "Trash";
-        $inboxTrash = \Auth::user()->inboxTrash()->get();
-        $sentTrash = \Auth::user()->sentTrash()->get();
+        $inboxTrash = \Auth::user()->inboxTrash()->orderBy('id', 'desc')->get();
+        $sentTrash = \Auth::user()->sentTrash()->orderBy('id', 'desc')->get();
         return view('messages.trash', compact('inboxTrash', 'sentTrash', 'title'));
     }
 
     public function sent() {
         $title = "Sent";
-        $messages = \Auth::user()->sent()->get();
+        $messages = \Auth::user()->sent()->orderBy('id', 'desc')->get();
         foreach ($messages as $message) {
             $message->link = '/messages/' . $message->id; 
         }
@@ -48,7 +48,7 @@ class MessageController extends Controller
 
     public function drafts() {
         $title = "Drafts";
-        $messages = \Auth::user()->drafts()->get();
+        $messages = \Auth::user()->drafts()->orderBy('id', 'desc')->get();
         foreach ($messages as $message) {
             $message->link = '/messages/' . $message->id . '/edit'; 
         }
