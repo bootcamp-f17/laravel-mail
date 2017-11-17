@@ -29,12 +29,12 @@
       {{ csrf_field() }}
       <button class="btn btn-xs btn-default {{ $star_class }}"><strong>&#9734;</strong></button>
     </form>
-@endif
  
   <form class="button-form" method="post" action="/messages/{{ $message->id }}/unread">
           {{ csrf_field() }}
      <button type="submit" name="button" value="unread" class="btn btn-default btn-xs"><i class="fa fa-envelope" aria-hidden="true" ></i></button>
   </form>
+@endif
 
   </div>
 
