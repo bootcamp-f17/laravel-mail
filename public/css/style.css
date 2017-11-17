@@ -27,3 +27,7 @@ tr:hover {
 	min-height: 150px;
 	
 }
+
+.col-sm-12 {
+	overflow-wrap: break-word;
+}

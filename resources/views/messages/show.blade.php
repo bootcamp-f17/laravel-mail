@@ -70,7 +70,7 @@
   <hr />
   <div class="form-group">
     <div class="col-sm-12">
-      {{ $message->body }}
+      {!! nl2br(e($message->body)) !!}
     </div>
   </div>
 </form>
@@ -96,14 +96,16 @@
   <input name="subject" type="hidden" value="{{ $message->subject }}">
       <div class="form-group">
           <label for="messageContent"></label>
-          <div contenteditable="true" class="form-control editable" id="body" name="body" placeholder="Reply here" required>
-          <br><br><hr>
-
-            <p>On {{ $message->prettySent() }}, {{ $message->sender()->first()->name }} wrote:</p>
-            <p style="margin-left: 20px;">{{ $message->body }} </p>
+          <textarea contenteditable="true" class="form-control editable" id="body" name="body" placeholder="Reply here" required>
 
 
-          </div>
+
+
+On {{ $message->prettySent() }}, {{ $message->sender()->first()->name }} wrote:
+
+{{ $message->body }}
+
+          </textarea>
       </div>
       <div class="form-group">
           <button type="submit" name="button" value="replyOne" class="btn btn-primary">Reply</button>
