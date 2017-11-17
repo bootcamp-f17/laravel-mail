@@ -29,5 +29,7 @@ Route::get('/messages/drafts', 'MessageController@drafts');
 
 Route::post('/messages/{id}/star', 'MessageController@star');
 
+Route::post('/messages/{id}/unread', 'MessageController@unread');
+
 Route::resource('/messages', 'MessageController');
 

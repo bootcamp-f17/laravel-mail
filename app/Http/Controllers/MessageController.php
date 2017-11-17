@@ -4,9 +4,6 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-use Illuminate\Support\Facades\DB;
-
-
 use Carbon\Carbon;
 
 class MessageController extends Controller
@@ -121,9 +118,7 @@ class MessageController extends Controller
     public function show($id)
     {
 
-        // Ack! Deleted records don't show!
-        
-       if ( \Auth::user()->sent->contains($id) ) {
+       if ( url()->previous() === url("/messages/sent") ) {
             // The logged-in user sent the message
             $message = \App\Message::find($id);
             $show_star = false;
@@ -203,17 +198,8 @@ class MessageController extends Controller
      */
     public function edit($id)
     {
-        // $message = \App\Message::find($id);
-
-        $message = \App\Message::find($id);
-
-        $recipients = \App\User::all();
-
-        // $recipients = collect($recipients);
-       
-        // $test = \App\Message_User::all()->where('recipient_id'. '=' . '')
-        // $theRecipient = $message->recipients->find(\Auth::user()->id);
-        return view('messages.edit',compact('message','recipients'));
+        //
+        return view('messages.edit');
     }
 
     /**
@@ -225,25 +211,8 @@ class MessageController extends Controller
      */
     public function update(Request $request, $id)
     {
-        
-        $message = \App\Message::find($id);
-
-        $message->sender_id = \Auth::user()->id;
-        $recipient = $message->recipients->find(\Auth::user()->id);
-        $message->subject = $request->input('subject');
-        $message->body = $request->input('body');
-
-        if ($request->input('button') === 'send') {
-            $message->sent_at = Carbon::now();
-        }
-
-        $message->save();
-
-        $message->recipients()->sync($request->input('recipients'));
-
-        return redirect('/messages');
-
-    
+        //
+        return "I should be saving an existing message now";
     }
 
     /**
@@ -257,14 +226,6 @@ class MessageController extends Controller
         $message = \App\Message::find($id);
 
         $sentMessage = \App\Message::find($id);
-
-        $draftMessage = \App\Message::find($id);
-        //return $draftMessage->sent_at ;
-        if (($draftMessage->sender_id === \Auth::user()->id) && ($draftMessage->sent_at === null)){
-            
-            $draftMessage->delete();
-            return redirect('/messages/drafts');
-        }
 
         if ($sentMessage->is_deleted == false) {
             $sentMessage->is_deleted = true;
@@ -284,7 +245,7 @@ class MessageController extends Controller
         else{
             $test = $message->recipients()->first()->pivot->deleted_at;
         }
-      
+
         if ($test === null) {
             $message->recipients()->updateExistingPivot(\Auth::user()->id, ['deleted_at' => Carbon::now()]);
         
@@ -303,6 +264,15 @@ class MessageController extends Controller
         $recipient = $message->recipients->find(\Auth::user()->id);
         $message->recipients()->updateExistingPivot(\Auth::user()->id, ['is_starred' => !$recipient->pivot->is_starred]);
         return redirect('/messages/' . $id);
+
+    }
+
+    public function unread($id) 
+    {
+        $message = \App\Message::find($id);
+        $recipient = $message->recipients->find(\Auth::user()->id);
+        $message->recipients()->updateExistingPivot(\Auth::user()->id, ['is_read' => false]);
+        return redirect('/messages');
 
     }
 
