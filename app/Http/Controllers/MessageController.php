@@ -103,6 +103,7 @@ class MessageController extends Controller
 
         // Ack! Deleted records don't show!
         
+        
         if ( \Auth::user()->sent->contains($id) ) {
 
             // The logged-in user sent the message
