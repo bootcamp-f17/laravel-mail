@@ -21,3 +21,9 @@
 tr:hover {
 	cursor: pointer;
 }
+
+.editable {
+	height: auto;
+	min-height: 150px;
+	
+}

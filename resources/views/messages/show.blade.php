@@ -10,8 +10,6 @@
       {{ csrf_field() }}
       {{ method_field('DELETE') }}
       <button class="btn btn-xs btn-default">
-
-
         @if ($authorizedMessage->pivot->deleted_at != null)
           <i class="fa fa-undo" aria-hidden="true"></i>
         @elseif($message->is_deleted == true)
@@ -19,7 +17,6 @@
         @else
           <i class="fa fa-trash" aria-hidden="true"></i>
         @endif
-
       </button>
     </form>
 
@@ -81,15 +78,36 @@
 <hr>
 <form method="POST" action="/messages">
                         {{ csrf_field() }}
-                  
-  <input name="recipients[]" type="hidden" value="{{ $message->sender_id }}">
+    
+@foreach($message->recipients()->get() as $recipient)
+  @if ($recipient->id !== \Auth::user()->id ) 
+
+
+  <input name="recipients[]" type="hidden" value="{{ $recipient->id }}">
+
+  @endif
+@endforeach
+
+    <input name="recipients[]" type="hidden" value="{{ $message->sender_id }}">
+    
+    <input name="sender" type="hidden" value="{{ $message->sender_id }}">
+
+
   <input name="subject" type="hidden" value="{{ $message->subject }}">
       <div class="form-group">
           <label for="messageContent"></label>
-          <textarea class="form-control" id="body" name="body" placeholder="Reply here" required></textarea>
+          <div contenteditable="true" class="form-control editable" id="body" name="body" placeholder="Reply here" required>
+          <br><br><hr>
+
+            <p>On {{ $message->prettySent() }}, {{ $message->sender()->first()->name }} wrote:</p>
+            <p style="margin-left: 20px;">{{ $message->body }} </p>
+
+
+          </div>
       </div>
       <div class="form-group">
-          <button type="submit" name="button" value="send" class="btn btn-primary">Send</button>
+          <button type="submit" name="button" value="replyOne" class="btn btn-primary">Reply</button>
+          <button type="submit" name="button" value="replyAll" class="btn btn-primary">Reply All</button>
       </div>
 </form>
 
