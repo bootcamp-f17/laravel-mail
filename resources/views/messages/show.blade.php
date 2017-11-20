@@ -4,9 +4,13 @@
 
   <a href="{{ URL::previous() }}" class="btn btn-xs btn-default">Back</a>
 
+
+
   <div class="pull-right">
 
     <form class="button-form" method="post" action="/messages/{{ $message->id }}">
+
+
       {{ csrf_field() }}
       {{ method_field('DELETE') }}
       <button class="btn btn-xs btn-default">
@@ -27,7 +31,14 @@
       {{ csrf_field() }}
       <button class="btn btn-xs btn-default {{ $star_class }}"><strong>&#9734;</strong></button>
     </form>
+
+    <form class="button-form" method="post" action="/messages/{{ $message->id }}/unread">
+            {{ csrf_field() }}
+       <button type="submit" name="button" value="unread" class="btn btn-default btn-xs" data-toggle="tooltip" data-placement="top" title="Mark as unread"><i class="fa fa-envelope" aria-hidden="true" ></i></button>
+    </form>
 @endif
+ 
+
 
   </div>
 
@@ -50,7 +61,7 @@
         
 @foreach ($message->recipients()->get() as $recipient)
 
-          {{ $recipient->name }}
+          {{ $recipient->name }} <br>
 
 @endforeach
 
