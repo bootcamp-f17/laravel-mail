@@ -61,7 +61,7 @@
         
 @foreach ($message->recipients()->get() as $recipient)
 
-          {{ $recipient->name }}
+          {{ $recipient->name }} <br>
 
 @endforeach
 
